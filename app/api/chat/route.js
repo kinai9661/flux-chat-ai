@@ -1,5 +1,5 @@
 export async function POST(req) {
-  const { messages } = await req.json();
+  const { messages, model = 'xai/grok-2-1212' } = await req.json();
 
   try {
     const response = await fetch('https://fluxes.zeabur.app/v1/chat/completions', {
@@ -9,7 +9,7 @@ export async function POST(req) {
         'Authorization': 'Bearer 1'
       },
       body: JSON.stringify({
-        model: 'xai/grok-2-1212',
+        model: model,
         messages: messages,
         stream: false
       })
@@ -21,7 +21,8 @@ export async function POST(req) {
 
     const data = await response.json();
     return Response.json({ 
-      content: data.choices[0].message.content 
+      content: data.choices[0].message.content,
+      model: model
     });
   } catch (error) {
     console.error('Chat API error:', error);
