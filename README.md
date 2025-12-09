@@ -2,6 +2,8 @@
 
 一个集成了 AI 聊天和图片生成功能的 Next.js 应用，支持一键部署到 Zeabur 免费版。
 
+[![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates)
+
 ## ✨ 功能特性
 
 - 💬 **AI 聊天**: 基于 Typli API (Grok-2-1212) 的智能对话
@@ -13,71 +15,28 @@
 
 ## 🚀 快速开始
 
-### 方法1: 一键部署到 Zeabur (推荐)
+### ⚡ 5 分钟快速部署
 
 1. **Fork 此仓库**
-   - 点击右上角 "Fork" 按钮
+2. **获取 API Keys** → [查看详细指南](ENV_SETUP.md#api-密钥获取)
+3. **部署到 Zeabur** → [快速开始](docs/QUICK_START.md)
+4. **配置环境变量** → [环境变量设置](ENV_SETUP.md)
 
-2. **部署到 Zeabur**
-   - 访问 [Zeabur Dashboard](https://zeabur.com)
-   - 点击 "Deploy New Service"
-   - 选择 "Deploy from GitHub"
-   - 授权并选择 `flux-chat-ai` 仓库
-   - Zeabur 会自动识别并部署
+### 📋 必需环境变量
 
-3. **配置环境变量**
-   
-   必需配置：
-   ```env
-   TYPLI_API_URL=https://fluxes.zeabur.app/v1/chat/completions
-   FLUX_API_ENDPOINT=your_flux_api_endpoint
-   FLUX_API_KEY=your_flux_api_key
-   ```
-   
-   可选配置（启用历史功能）：
-   ```env
-   POSTGRES_URL=your_postgres_connection_url
-   ```
-
-4. **添加数据库（可选）**
-   - 在同一项目点击 "Add Service"
-   - 选择 "PostgreSQL"
-   - Zeabur 会自动连接并配置 `POSTGRES_URL`
-
-### 方法2: 本地开发
-
-1. **克隆仓库**
-```bash
-git clone https://github.com/kinai9661/flux-chat-ai.git
-cd flux-chat-ai
-```
-
-2. **安装依赖**
-```bash
-npm install
-```
-
-3. **配置环境变量**
-
-复制 `.env.example` 为 `.env.local`：
-```bash
-cp .env.example .env.local
-```
-
-编辑 `.env.local` 文件：
 ```env
+# 聊天功能 (免费)
 TYPLI_API_URL=https://fluxes.zeabur.app/v1/chat/completions
-FLUX_API_ENDPOINT=your_flux_api_endpoint
-FLUX_API_KEY=your_flux_api_key
-POSTGRES_URL=your_postgres_url  # 可选
+
+# 图片生成 (需要申请)
+FLUX_API_ENDPOINT=your_flux_endpoint
+FLUX_API_KEY=your_flux_key
+
+# 数据库 (可选 - 用于历史记录)
+POSTGRES_URL=your_postgres_url
 ```
 
-4. **运行开发服务器**
-```bash
-npm run dev
-```
-
-访问 [http://localhost:3000](http://localhost:3000)
+完整配置说明 → [ENV_SETUP.md](ENV_SETUP.md)
 
 ## 📦 技术栈
 
@@ -89,54 +48,81 @@ npm run dev
   - 聊天: Typli API (Grok-2-1212)
   - 图片: FLUX API
 
-## 🔧 API 配置说明
+## 🔧 本地开发
 
-### 1. 聊天 API
-默认使用免费的 Typli API：
+```bash
+# 1. 克隆仓库
+git clone https://github.com/kinai9661/flux-chat-ai.git
+cd flux-chat-ai
+
+# 2. 安装依赖
+npm install
+
+# 3. 配置环境变量
+cp .env.example .env.local
+# 编辑 .env.local 填入你的 API keys
+
+# 4. 启动开发服务器
+npm run dev
+
+# 5. 打开浏览器访问
+open http://localhost:3000
 ```
-https://fluxes.zeabur.app/v1/chat/completions
+
+## 📖 文档
+
+- 📝 [环境变量设置完整指南](ENV_SETUP.md)
+- ⚡ [5 分钟快速部署](docs/QUICK_START.md)
+- 🎯 [API 配置说明](#api-配置说明)
+- ❓ [常见问题](#常见问题)
+
+## 🎯 API 配置说明
+
+### 聊天 API
+
+使用免费的 Typli API，无需申请：
+
+```env
+TYPLI_API_URL=https://fluxes.zeabur.app/v1/chat/completions
 ```
 
 支持模型：
 - `xai/grok-2-1212` (默认)
 - `xai/grok-4-fast`
-- 其他兼容 OpenAI 格式的模型
 
-### 2. 图片生成 API
+### 图片生成 API
 
-需要配置你自己的 FLUX API 端点。推荐选项：
+需要选择以下服务之一：
 
-**方案 A: 使用 Replicate**
+#### 选项 A: Replicate (推荐)
 ```env
 FLUX_API_ENDPOINT=https://api.replicate.com/v1/predictions
-FLUX_API_KEY=your_replicate_api_key
+FLUX_API_KEY=r8_your_key
 ```
+- 官网: https://replicate.com
+- 新用户 $5 免费额度
+- 获取: [Replicate API Tokens](https://replicate.com/account/api-tokens)
 
-**方案 B: 使用 BFL API**
+#### 选项 B: Hugging Face (免费)
+```env
+FLUX_API_ENDPOINT=https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-dev
+FLUX_API_KEY=hf_your_token
+```
+- 官网: https://huggingface.co
+- 免费但有速率限制
+- 获取: [HF Tokens](https://huggingface.co/settings/tokens)
+
+#### 选项 C: BFL API
 ```env
 FLUX_API_ENDPOINT=https://api.bfl.ml/v1/flux-pro-1.1
-FLUX_API_KEY=your_bfl_api_key
+FLUX_API_KEY=your_bfl_key
 ```
+- 官网: https://blackforestlabs.ai
+- 按使用付费
 
-**方案 C: 自建 FLUX 服务**
-使用你自己部署的 FLUX API 端点
+详细对比 → [API 密钥获取](ENV_SETUP.md#api-密钥获取)
 
-### 3. 数据库配置（可选）
-
-如果想启用历史记录功能，需要配置 PostgreSQL。
-
-**Zeabur 上配置**：
-- 在项目中添加 PostgreSQL 服务
-- Zeabur 会自动注入 `POSTGRES_URL`
-
-**其他免费数据库选项**：
-- [Neon](https://neon.tech) - 免费 0.5GB
-- [Supabase](https://supabase.com) - 免费 500MB
-- [Vercel Postgres](https://vercel.com/storage/postgres) - 免费 256MB
-
-数据库表会自动创建，无需手动设置。
-
-## 📁 项目结构
+## 🏗️ 项目结构
 
 ```
 flux-chat-ai/
@@ -155,81 +141,133 @@ flux-chat-ai/
 │   └── ImageGenerator.jsx      # 图片生成器
 ├── lib/
 │   └── db.js                   # 数据库工具
-├── public/
-├── package.json
-├── .env.example
-├── zbpack.json             # Zeabur 配置
-└── README.md
+├── docs/
+│   └── QUICK_START.md          # 快速开始指南
+├── .env.example                # 环境变量模板
+├── ENV_SETUP.md                # 环境变量完整指南
+└── README.md                   # 本文件
 ```
 
 ## 🌟 使用说明
 
-### 聊天功能
+### 💬 聊天功能
 
-1. 在主页点击「💬 聊天」标签
+1. 点击「💬 聊天」标签
 2. 输入你的问题
-3. AI 会实时回复
-4. 支持多轮对话上下文
+3. AI 实时回复
+4. 支持多轮对话
 
-### 图片生成
+### 🎨 图片生成
 
 1. 点击「🎨 文生图」标签
-2. 输入图片描述 (Prompt)
-   - 中文和英文均可
-   - 建议使用详细描述
+2. 输入图片描述 (中英文均可)
 3. 选择生成数量 (1-4 张)
-4. 点击「生成图片」按钮
-5. 等待 AI 创作完成 (20-30秒)
-6. 鼠标悬停在图片上可下载
+4. 点击「生成图片」
+5. 等待 20-30 秒
+6. 悬停图片可下载
 
-### 历史记录
+### 📚 历史记录
 
-1. 点击「📚 历史记录」查看所有生成的图片
-2. 每张图片显示 Prompt 和生成时间
-3. 悬停可以下载图片
+1. 点击「📚 历史记录」
+2. 查看所有生成的图片
+3. 显示 Prompt 和生成时间
+4. 支持下载
 
-> 注意：历史功能需要配置数据库才能使用
+> 注意：历史功能需要配置数据库
 
-## 🎯 Zeabur 部署步骤
+## 🚀 部署指南
 
-### Step 1: 准备仓库
+### Zeabur 部署 (推荐)
+
+详细步骤 → [快速开始指南](docs/QUICK_START.md)
+
+1. Fork 此仓库
+2. 登录 [Zeabur](https://zeabur.com)
+3. 创建新项目
+4. 从 GitHub 部署
+5. 配置环境变量
+6. 完成！
+
+### Vercel 部署
+
 ```bash
-git clone https://github.com/kinai9661/flux-chat-ai.git
-cd flux-chat-ai
+# 安装 Vercel CLI
+npm i -g vercel
 
-# 或者 Fork 到你的 GitHub 账号
+# 部署
+vercel
+
+# 配置环境变量
+vercel env add TYPLI_API_URL
+vercel env add FLUX_API_ENDPOINT
+vercel env add FLUX_API_KEY
+
+# 重新部署
+vercel --prod
 ```
 
-### Step 2: 登录 Zeabur
-- 访问 [zeabur.com](https://zeabur.com)
-- 使用 GitHub 登录
+## 💾 数据库配置
 
-### Step 3: 创建项目
-1. 点击 "Create Project"
-2. 命名项目（如 `flux-chat-ai`）
+### Zeabur 添加数据库
 
-### Step 4: 部署服务
-1. 点击 "Deploy New Service"
-2. 选择 "Deploy from GitHub"
-3. 选择 `flux-chat-ai` 仓库
-4. 选择 `main` 分支
+1. 在项目中点击 "Add Service"
+2. 选择 "PostgreSQL"
+3. 自动连接和配置
 
-### Step 5: 配置环境变量
-在 Zeabur 控制面板中添加：
+### 其他免费数据库
+
+| 服务 | 免费额度 | 获取链接 |
+|------|---------|----------|
+| Neon | 0.5GB | [neon.tech](https://neon.tech) |
+| Supabase | 500MB | [supabase.com](https://supabase.com) |
+| Vercel Postgres | 256MB | [vercel.com](https://vercel.com/storage/postgres) |
+
+## ❓ 常见问题
+
+### Q: 聊天功能不工作？
+
+A: 检查 `TYPLI_API_URL` 环境变量：
 ```env
 TYPLI_API_URL=https://fluxes.zeabur.app/v1/chat/completions
-FLUX_API_ENDPOINT=your_flux_endpoint
-FLUX_API_KEY=your_flux_key
 ```
 
-### Step 6: 添加数据库（可选）
-1. 在同一项目点击 "Add Service"
-2. 选择 "PostgreSQL"
-3. Zeabur 自动连接
+### Q: 图片生成失败？
 
-### Step 7: 部署完成
-- 等待构建完成 (2-3分钟)
-- 点击生成的域名访问应用
+A: 确认：
+1. ✅ `FLUX_API_ENDPOINT` 已配置
+2. ✅ `FLUX_API_KEY` 已配置且有效
+3. ✅ API 账户有余额
+4. ✅ API 端点 URL 正确
+
+测试 API 连接：
+```bash
+curl -X POST $FLUX_API_ENDPOINT \
+  -H "Authorization: Bearer $FLUX_API_KEY" \
+  -d '{"prompt":"test"}'
+```
+
+### Q: 历史记录不显示？
+
+A: 历史功能需要：
+1. 配置 `POSTGRES_URL`
+2. 数据库连接有效
+3. 表会自动创建
+
+### Q: 环境变量修改后不生效？
+
+A: 
+- **本地**: 重启 `npm run dev`
+- **Zeabur**: 保存后自动重新部署
+- **Vercel**: 手动触发重新部署
+
+### Q: 如何更换聊天模型？
+
+A: 修改 `app/api/chat/route.js`：
+```javascript
+model: 'xai/grok-4-fast'  // 或其他模型
+```
+
+更多问题 → [完整 FAQ](ENV_SETUP.md#常见问题)
 
 ## 📊 Zeabur 免费版限制
 
@@ -240,26 +278,9 @@ FLUX_API_KEY=your_flux_key
 | 部署数量 | 无限制 |
 | SSL 证书 | 免费 |
 | CI/CD | 自动 |
-| 域名 | 免费子域名 |
+| 自定义域名 | 支持 |
 
-## ❓ 常见问题
-
-### Q: 聊天功能不可用？
-A: 检查 `TYPLI_API_URL` 是否配置正确，默认使用 `https://fluxes.zeabur.app/v1/chat/completions`
-
-### Q: 图片生成失败？
-A: 需要配置有效的 `FLUX_API_ENDPOINT` 和 `FLUX_API_KEY`
-
-### Q: 历史记录不显示？
-A: 历史功能需要配置 `POSTGRES_URL`，如不需要可以不配置
-
-### Q: 如何更换聊天模型？
-A: 修改 `app/api/chat/route.js` 中的 `model` 参数
-
-### Q: 支持哪些 FLUX 模型？
-A: 支持所有 FLUX 系列模型，只需配置对应的 API 端点
-
-## 👥 贡献
+## 🤝 贡献
 
 欢迎提交 Issue 和 Pull Request！
 
@@ -276,14 +297,19 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 ## 🔗 相关链接
 
 - [Zeabur 文档](https://zeabur.com/docs)
-- [Next.js 14 文档](https://nextjs.org/docs)
+- [Next.js 文档](https://nextjs.org/docs)
 - [Tailwind CSS](https://tailwindcss.com)
 - [FLUX AI](https://blackforestlabs.ai)
+- [Replicate](https://replicate.com)
 
 ## ⭐ Star History
 
 如果这个项目对你有帮助，请给个 Star 支持一下！
 
+[![Star History Chart](https://api.star-history.com/svg?repos=kinai9661/flux-chat-ai&type=Date)](https://star-history.com/#kinai9661/flux-chat-ai&Date)
+
 ---
 
 **Made with ❤️ by [kinai9661](https://github.com/kinai9661)**
+
+**最后更新**: 2025-12-09
