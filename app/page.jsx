@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
-import ChatInterface from '@/components/ChatInterface';
-import ImageGenerator from '@/components/ImageGenerator';
+import ChatInterface from '../components/ChatInterface';
+import ImageGenerator from '../components/ImageGenerator';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('chat');
@@ -41,8 +41,7 @@ export default function Home() {
           <a
             href="/history"
             className="px-6 py-3 rounded-lg font-medium bg-white text-gray-700 hover:bg-gray-50 transition"
-          >
-            📚 历史记录
+          >            📚 历史记录
           </a>
         </div>
 
